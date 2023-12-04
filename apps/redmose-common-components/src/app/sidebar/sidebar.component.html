@@ -1,0 +1,103 @@
+<div class="convertedin-sidebar">
+  <!-- Logo -->
+  <figure class="sidebar__main-logo">
+    <img src="assets/menu-logo.svg" alt="convertedin-logo" />
+  </figure>
+
+  <div class="sidebar__container flex flex-column flex-grow-1">
+    <div class="flex-grow-1 flex flex-column justify-content-between">
+      <div class="flex flex-column gap-1 mb-1">
+        <!-- Routes -->
+        <ng-container *ngFor="let item of accordionItems">
+          <p class="sidebar__title">{{ item.title }}</p>
+          <ng-container
+            *ngTemplateOutlet="accordion; context: { $implicit: item.routes }"
+          ></ng-container>
+        </ng-container>
+      </div>
+
+      <div class="flex flex-column gap-1">
+        <!-- More Items -->
+        <ng-container *ngFor="let item of moreItems">
+          <p class="sidebar__title">{{ item.title }}</p>
+          <ng-container
+            *ngTemplateOutlet="accordion; context: { $implicit: item.routes }"
+          ></ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Routes template -->
+<ng-template let-item #accordion>
+  <p-accordion class="sidebar__accordion">
+    <ng-container *ngFor="let route of item">
+      <!-- Route link (if route is provided in base object level) -->
+      <a
+        *ngIf="route.route"
+        [href]="route.route"
+        class="flex align-items-center gap-2 {{
+          route.icon ? 'sidebar__main-route' : 'sidebar__subroute'
+        }}"
+        [ngClass]="{ sidebar__soon: route.soon }"
+      >
+        <img [src]="route.icon" alt="route-icon" *ngIf="route.icon" />
+        <span class="flex-grow-1"> {{ route.title }}</span>
+        <span *ngIf="route.new || route.soon" class="sidebar__new-lbl">
+          {{ route.new ? 'New' : 'Soon' }}
+        </span>
+      </a>
+
+      <!-- Accorion tab -->
+      <p-accordionTab
+        *ngIf="!route.route"
+        header="{{ route.icon ? undefined : route.title }}"
+        iconPos="end"
+        class="{{
+          route.icon ? 'sidebar__main-accordion' : 'sidebar__sub-accordion'
+        }}"
+      >
+        <!-- Header template (in case icon is present) -->
+        <ng-template pTemplate="header" *ngIf="route.icon">
+          <div class="flex gap-2 align-items-center">
+            <img [src]="route.icon" alt="route-icon" />
+            <p>{{ route.title }}</p>
+          </div>
+        </ng-template>
+
+        <!-- Nested accordion (in case subRoutes has data) -->
+        <ng-container *ngIf="route.subRoutes?.length > 0">
+          <ng-container
+            *ngTemplateOutlet="
+              accordion;
+              context: { $implicit: route.subRoutes }
+            "
+          ></ng-container>
+        </ng-container>
+
+        <!-- Route links -->
+        <ng-container *ngIf="route.routes?.length > 0">
+          <ul class="flex flex-column sidebar__subroutes gap-1">
+            <li *ngFor="let subRoute of route.routes" class="sidebar__subroute">
+              <a
+                [href]="subRoute.route"
+                class="flex justify-content-between align-items-center"
+                [ngClass]="{ sidebar__soon: subRoute.soon }"
+              >
+                {{ subRoute.label }}
+
+                <span
+                  *ngIf="subRoute.new || subRoute.soon"
+                  class="sidebar__new-lbl"
+                >
+                  {{ subRoute.new ? 'New' : 'Soon' }}
+                </span>
+              </a>
+            </li>
+          </ul>
+        </ng-container>
+      </p-accordionTab>
+    </ng-container>
+  </p-accordion>
+</ng-template>

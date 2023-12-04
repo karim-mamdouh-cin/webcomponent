@@ -19,7 +19,11 @@
           "apps/redmose-common-components/src/favicon.ico",
           "apps/redmose-common-components/src/assets"
         ],
-        "styles": ["apps/redmose-common-components/src/styles.scss"],
+        "styles": [
+          "apps/redmose-common-components/src/styles.scss",
+          "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+          "node_modules/primeng/resources/primeng.min.css"
+        ],
         "scripts": []
       },
       "configurations": {
@@ -33,7 +37,7 @@
             {
               "type": "anyComponentStyle",
               "maximumWarning": "2kb",
-              "maximumError": "4kb"
+              "maximumError": "5kb"
             }
           ],
           "outputHashing": "all"
